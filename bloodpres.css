@@ -16,18 +16,14 @@
   overflow: hidden;
 }
 .content{
-  position: relative;
-  z-index: 1;
-  color: #fdf0d5;
-  text-align: center;
-  padding: 20px;
-  /*bottom: 0;
+ 
+  bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   color: #fdf0d5;
   width: 100%;
   padding: 20px;
   right: 50%;
-  text-align: center;*/
+  text-align: center;
 }
 h1 {
   text-align: center;
