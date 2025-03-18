@@ -1,4 +1,4 @@
-#myVideo{
+/*#myVideo{
   position: fixed;
   right: 0;
   bottom: 0;
@@ -22,4 +22,31 @@
   text-align: center;
   padding: 20px;
   margin-top: 100vh; /* Adjust this value as needed to position the content below the video */
+#myVideo {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  min-width: 100%;
+  min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  object-fit: cover; /* Ensures the video fills the screen and keeps the aspect ratio */
 }
+
+.video-container {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.content {
+  position: relative;
+  color: #fdf0d5;
+  text-align: center;
+  padding: 20px;
+  margin-top: 100vh; /* Adjusts content to appear below the video */
+  z-index: 1; /* Ensures content is on top of the video */
+}
+
