@@ -18,3 +18,11 @@
 h1 {
   text-align: center;
 }
+.center-container{
+  display: flex;
+  justify-contetn: center;
+  align-items: center;
+  height: 100vh;
+  text-align: center;
+  flex-direction: column;
+}
