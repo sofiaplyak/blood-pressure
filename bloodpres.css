@@ -17,6 +17,7 @@
 }
 .content{
   border: 1px solid transparent;
+  top: 60%;
   bottom: 0;
   background: rgba(0, 0, 0, 0.5);
   color: #fdf0d5;
