@@ -4,25 +4,31 @@
   bottom: 0;
   min-width: 100%;
   min-height: 100%;
+  width: auto;
+  height: auto;
+  z-index: -1;
+  background-size: cover;
+}
+.video-container{
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
 }
 .content{
-  position: fixed;
-  bottom: 0;
-  /*background: rgba(0, 0, 0, 0.5);*/
+  position: relative;
+  z-index: 1;
+  color: #fdf0d5;
+  text-align: center;
+  padding: 20px;
+  /*bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
   color: #fdf0d5;
   width: 100%;
   padding: 20px;
   right: 50%;
-  text-align: center;
+  text-align: center;*/
 }
 h1 {
   text-align: center;
-}
-.center-container{
-  display: flex;
-  justify-contetn: center;
-  align-items: center;
-  height: 100vh;
-  text-align: center;
-  flex-direction: column;
 }
