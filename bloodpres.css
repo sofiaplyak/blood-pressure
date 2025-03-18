@@ -15,7 +15,6 @@
   right: 50%;
   text-align: center;
 }
-h1{
-  display: flex;
-  justify-content: center;
+h1 {
+  text-align: center;
 }
