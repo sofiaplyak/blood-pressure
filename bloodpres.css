@@ -15,17 +15,11 @@
   height: 100vh;
   overflow: hidden;
 }
-.content{
-  border: 1px solid transparent;
-  top: 60%;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
+.content {
+  position: relative;
+  z-index: 1;
   color: #fdf0d5;
-  width: 100%;
+  text-align: center;
   padding: 20px;
-  right: 50%;
-  text-align: center;
-}
-h1 {
-  text-align: center;
+  margin-top: 100vh; /* Adjust this value as needed to position the content below the video */
 }
