@@ -1,21 +1,27 @@
 #myVideo{
-  position: absolute;
+  position: fixed;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   object-fit: cover;
- /* min-width: 100%;
-  min-height: 100%; */
+  min-width: 100%;
+  min-height: 100%; 
+  z-index: -1;
 }
-/*.content{
+.content{
   position: absolute;
-  text-align: center;
   left: 50%;
-  bottom: 0;
+  transform: translate(-50%, -50%);
+  text-align: center;
   background: rgba(0,0,0,0.5);
   color: #fdf0d5;
   padding: 20px;
-}*/
+  border-radius: 10px;
+}
+.content a{
+  text-decoration: none;
+  font-weight: bold;
+}
 .content a:link{
   color: #fdf0d5;
 }
