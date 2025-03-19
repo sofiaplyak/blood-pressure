@@ -11,24 +11,12 @@
 		
 	<div class="video-container">
 			
-			<video id="myVideo" autoplay loop muted>
+			<video id="myVideo" controls="controls autoplay">
 				<source src="didsay.mp4" type="video/mp4" >
 				Your browser does not support the video tag, womp womp.
 			</video>
 		<button onclick="enableSound()">Enable Sound</button>
-		<script>
-			function enableSound() {
-				let video = document.getElementById("myVideo");
-				video.muted = false;
-				video.play();
-			}
-			document.addEventListener("DOMContentLoaded", () => {
-				let video = document.getElementById("myVideo");
-				video.play().catch(error => {
-					console.log("Autoplay with sound failed, requiring user interaction.");
-			});
-			});
-		</script>
+		
 	</div>
 		<!-- some text and link to dial -->
 		<div class="content">
