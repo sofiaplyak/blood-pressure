@@ -9,14 +9,15 @@ w#myVideo{
  /* min-width: 100%;
   min-height: 100%; */
 }
-/*.content{
+.content{
+  border: 1px solid #F42272;
   text-align: center;
   left: 50%;
   bottom: 0;
   background: rgba(0,0,0,0.5);
   color: #fdf0d5;
   padding: 20px;
-}*/
+}
 .content a:link{
   color: #fdf0d5;
 }
@@ -28,13 +29,6 @@ a:hover{
 }
 a:active{
   color: #fdf0d5;
-}
-.content {
-  border: 1px solid dashed pink;
-  font-size: 40px;
-  
-  text-align: center;
-  
 }
 
 
