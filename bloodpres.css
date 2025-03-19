@@ -10,6 +10,7 @@ w#myVideo{
   min-height: 100%; */
 }
 .content{
+  position: absolute;
   border: 1px solid #F42272;
   text-align: center;
   left: 50%;
