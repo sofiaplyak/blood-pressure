@@ -1,89 +1,210 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Interactive Gauge</title>
-  <style>
-    body {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      background-color: #f3f3f3;
-      margin: 0;
-    }
-    .gauge {
-      position: relative;
-      width: 200px;
-      height: 100px;
-      background: #ddd;
-      border-radius: 100px 100px 0 0;
-      overflow: hidden;
-      box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
-    }
-    .gauge::before {
-      content: '';
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      background: linear-gradient(to bottom, #f3f3f3, #ddd);
-      border-radius: 100px 100px 0 0;
-      z-index: 1;
-    }
-    .needle {
-      position: absolute;
-      bottom: 0;
-      left: 50%;
-      width: 4px;
-      height: 90px;
-      background: red;
-      transform-origin: bottom center;
-      transform: rotate(-90deg);
-      z-index: 2;
-      transition: transform 5s ease;
-    }
-    .value {
-      position: absolute;
-      top: 120px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-family: Arial, sans-serif;
-      font-size: 18px;
-      font-weight: bold;
-      color: #333;
-    }
-    .input-section {
-      margin-top: 20px;
-    }
-    .input-section input, .input-section button {
-      font-size: 16px;
-      padding: 5px;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pressure Measuring</title>
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-  <div class="gauge">
-    <div class="needle" id="needle"></div>
-    <div class="value" id="value">0%</div>
-  </div>
-  <div class="input-section">
-    <input type="number" id="inputValue" placeholder="Enter a value (0-100)" min="0" max="100">
-    <button onclick="updateGauge()">Update Gauge</button>
-  </div>
-  <script>
-    function updateGauge() {
-      const needle = document.getElementById('needle');
-      const valueDisplay = document.getElementById('value');
-      const inputValue = document.getElementById('inputValue').value;
+    <div class="calculator">
+        <h1>Calculator for Arterial Pressure</h1>
 
-      // Parse the input and ensure it's a valid number between 0 and 100
-      const value = Math.max(0, Math.min(parseInt(inputValue, 10) || 0, 100));
-      const rotation = -90 + (value * 1.8); // Map 0-100 to -90 to 90 degrees
-      needle.style.transform = `rotate(${rotation}deg)`;
-      valueDisplay.textContent = `${value}%`;
-    }
-  </script>
+        <label for="age">Insert your age: </label>
+        <input type="number" id="age" min="1" max="120" required>
+
+        <label for="pulse">Insert your pulse (bpm): </label>
+        <input type="number" id="pulse" min="40" max="180" required>
+
+        <button onclick="calculatePressure()">Calculate</button>
+        
+        <div id="result"></div>
+        
+        <div class="gauge-container">
+            <canvas id="gaugeCanvas"></canvas>
+        </div>
+        <canvas id="chart"></canvas>
+    </div>
+
+    <script>
+        function calculatePressure() {
+            let age = parseInt(document.getElementById("age").value);
+            let pulse = parseInt(document.getElementById("pulse").value);
+
+            if (isNaN(age) || age < 1 || age > 120) {
+                alert("Please enter a valid age (1-120 years).");
+                return;
+            }
+            if (isNaN(pulse) || pulse < 40 || pulse > 180) {
+                alert("Please enter a valid heart rate (40-180 bpm).");
+                return;
+            }
+
+            // New formulas for blood pressure calculation
+            let systolic = 100 + (age / 2) + (pulse / 10);
+            let diastolic = systolic - (pulse / 2);
+
+            let status = checkPressureStatus(systolic, diastolic);
+
+            document.getElementById("result").innerHTML = `
+                <p>Systolic pressure: <b>${Math.round(systolic)}</b> mmHg</p>
+                <p>Diastolic pressure: <b>${Math.round(diastolic)}</b> mmHg</p>
+                <p><b>${status}</b></p>
+            `;
+
+            drawGauge(systolic);
+            drawChart(pulse, systolic, diastolic);
+        }
+
+        function checkPressureStatus(systolic, diastolic) {
+            if (systolic < 90 || diastolic < 60) {
+                return "❗ Low blood pressure (Hypotension) womp womp";
+            } else if (systolic > 140 || diastolic > 90) {
+                return "⚠️ High blood pressure (Hypertension). Brooo Chilll";
+            } else {
+                return "✅ Normal blood pressure. Pretty good ^_^";
+            }
+        }
+
+        function drawChart(pulse, systolic, diastolic) {
+            const ctx = document.getElementById('chart').getContext('2d');
+
+            if (window.myChart instanceof Chart) {
+                window.myChart.destroy();
+            }
+
+            window.myChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: ['Heart Rate', 'Systolic', 'Diastolic'],
+                    datasets: [{
+                        label: 'Values',
+                        data: [pulse, systolic, diastolic],
+                        backgroundColor: ['#FAC67A', '#da498d', '#69247C']
+                    }]
+                },
+                options: {
+                    scales: {
+                        y: { beginAtZero: true }
+                    }
+                }
+            });
+        }
+
+        function drawGauge(value) {
+            const canvas = document.getElementById("gaugeCanvas");
+            const ctx = canvas.getContext("2d");
+
+            canvas.width = 250;
+            canvas.height = 150;
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            ctx.beginPath();
+            ctx.arc(125, 125, 100, Math.PI, 2 * Math.PI);
+            ctx.lineWidth = 10;
+            ctx.strokeStyle = "#ccc";
+            ctx.stroke();
+
+            drawGaugeSection(ctx, 90, 140, "#009e60");
+            drawGaugeSection(ctx, 60, 90, "#f8dc75");
+            drawGaugeSection(ctx, 140, 180, "#c80815");
+
+            drawGaugeNeedle(ctx, value);
+        }
+
+        function drawGaugeSection(ctx, min, max, color) {
+            let startAngle = Math.PI + ((min - 50) / 130) * Math.PI;
+            let endAngle = Math.PI + ((max - 50) / 130) * Math.PI;
+
+            ctx.beginPath();
+            ctx.arc(125, 125, 100, startAngle, endAngle);
+            ctx.lineWidth = 10;
+            ctx.strokeStyle = color;
+            ctx.stroke();
+        }
+
+        function drawGaugeNeedle(ctx, value) {
+            let angle = Math.PI + ((value - 50) / 130) * Math.PI;
+            let needleLength = 90;
+
+            ctx.beginPath();
+            ctx.moveTo(125, 125);
+            ctx.lineTo(125 + needleLength * Math.cos(angle), 125 + needleLength * Math.sin(angle));
+            ctx.lineWidth = 5;
+            ctx.strokeStyle = "pink";
+            ctx.stroke();
+        }
+    </script>
+	
+	
+	
+	<button onclick="toggleDetails()">More Details</button>
+	
+	<div class="details">
+		<p>Blood pressure is recorded as two numbers, one over the other. Both are measured in units called millimetres of mercury(mm Hg)
+			Systolic pressure: the top number, is the pressure each time your heart contracts (or squeezes).
+			Diastolic pressure: the bottom number, is the pressure in the artery as the heart relaxes before the next beat.</p>
+			
+		<table>
+			<tr>
+				<th>Blood Pressure</th>
+				<th>Systolic</th>
+				<th>Diastolic</th>
+			</tr>
+			<tr>
+				<td>Low</td>
+				<td>less than 90</td>
+				<td>less than 60</td>
+			</tr>
+			<tr>
+				<td>Optimal</td>
+				<td>less than 120</td>
+				<td>less than 80</td>
+			</tr>
+			<tr>
+				<td>Normal</td>
+				<td>120 - 129</td>
+				<td>80 - 84</td>
+			</tr>
+			<tr>
+				<td>Normal to High</td>
+				<td>130 - 139</td>
+				<td>85 - 89</td>
+			</tr>
+			<tr>
+				<td>High</td>
+				<td>greater than 140</td>
+				<td>greater than 90</td>
+			</tr>
+		</table>
+		<p> Average blood pressure for teens and children:</p>
+			<ul>
+				<li>Newborns up to 1 month: 60-90/ 20-60;</li>
+				<li>Infants: 87-105 / 53-66;</li>
+				<li>Toddlers: 95-105 / 53-66;</li>
+				<li>Preschoolers: 95-110 / 56-70;</li>
+				<li>School-aged children: 97-112 / 57-71;</li>
+				<li>Adolescents: 112-128 / 66-80;</li>
+			</ul>
+		<p>Adulthood:</p>
+			<ul>
+				<li>18-39 years: women (110/68), men (119/70);</li>
+				<li>40-59 years: women (122/74), men (124/77);</li>
+				<li>60+ years: women (139/68), men (133/69);</li>
+			</ul>
+	</div>
+	
+	<script>
+		function toggleDetails() {
+			var details = document.querySelector('.details');
+			if(details.style.display === "none" || details.style.display === "") {
+				details.style.display = "block";
+			}else {
+				details.style.display = "none";
+			}
+		}
+	</script>
 </body>
 </html>
+
